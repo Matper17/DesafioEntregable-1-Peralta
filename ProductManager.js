@@ -2,8 +2,7 @@ const fs = require("fs");
 const path = "ProductFiles.json"
 
 class ProductManager {
-
-  //Programación asíncrona
+//Programación asíncrona
   async getProduct () {
     try {
       if(fs.existsSync(path)){

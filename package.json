@@ -1,0 +1,24 @@
+{
+  "name": "desafioentregable1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matper17/DesafioEntregable-1-Peralta.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matper17/DesafioEntregable-1-Peralta/issues"
+  },
+  "homepage": "https://github.com/Matper17/DesafioEntregable-1-Peralta#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3"
+  }
+}
