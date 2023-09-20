@@ -2,6 +2,10 @@ const fs = require("fs");
 const path = "ProductFiles.json"
 
 class ProductManager {
+  constructor (path){
+    this.path = path; 
+    this.product = []; 
+  }
 //Programación asíncrona
   async getProduct () {
     try {
@@ -16,17 +20,26 @@ class ProductManager {
     }
   }
 
+  generateId = async() =>{
+    const counter = this.product.length
+    if (counter == 0){
+      return 1
+    } else{
+      return (this.product[counter-1].id)+1
+    }
+  }
+
   async createProduct (product){
     try {
-      const products = await this.getProduct()
+      const product = await this.getProduct()
       let id 
       if(!product.length){
         id = 1
       }else{
-        id = this.products[this.products.length-1].id + 1
+        id = this.product[this.product.length-1].id + 1
       }
-      products.push({id,...product})
-      await fs.promises.writeFile(path, JSON.stringify(products))
+      product.push({id,...product})
+      await fs.promises.writeFile(path, JSON.stringify(product))
     } catch (error) {
       return error
     }
@@ -35,9 +48,9 @@ class ProductManager {
   async getProductById(id) {
     try {
       const products = await this.getProduct()
-      this.product = products.parse(u => u.id === id);
+      const product = products.find(u => u.id === id);
       if(!product){
-        return "This product does not exist"
+        return "El producto ingresado es inexistente"
       } else{
         return product
       }
@@ -45,6 +58,47 @@ class ProductManager {
       return error
     }
   }
+
+  addProduct = async (title,description,price,thumbnail,code,stock) =>{
+    if (!title || !description || !price || !thumbnail || !code || !stock){
+      console.error ("Debes ingresar los datos del producto")
+      return
+    } else{
+    const repeatCode = this.product.find (element => element.code === code)
+    if (repeatCode){
+      console.error("El código ingresado ya existe")
+      return
+    } else {
+      const id = await this.generateId()
+      const newProduct = {
+        title,description,price,thumbnail,code,stock
+      }
+      this.product.push(newProduct)
+      await fs.promises.writeFile(this.path, JSON.stringify(this.product, null, 2))
+    }
+  }
+}
+
+updateProduct = async(id,title,description,price,thumbnail,code,stock) =>{
+  if (!title || !description || !price || !thumbnail || !code || !stock){
+    console.error ("Debes ingresar los datos del producto")
+    return 
+} else{
+  const productList = await this.getProduct()
+  const newProductList = productList.map(element=>{
+    if(element.id === id){
+      const updateProduct={
+        ...element, 
+        title,description,price,thumbnail,code,stock
+      }
+      return updateProduct
+    } else {
+      return element
+    }
+  })
+  await fs.promises.writeFile (this.path, JSON.stringify(newProductList, null, 2))
+}
+}
 
   async deleteProduct(id){
     try {
