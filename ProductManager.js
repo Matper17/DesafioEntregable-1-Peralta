@@ -79,7 +79,7 @@ class ProductManager {
   }
 }
 
-updateProduct = async(id,title,description,price,thumbnail,code,stock) =>{
+  updateProduct = async(id,title,description,price,thumbnail,code,stock) =>{
   if (!title || !description || !price || !thumbnail || !code || !stock){
     console.error ("Debes ingresar los datos del producto")
     return 
