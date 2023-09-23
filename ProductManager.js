@@ -3,51 +3,27 @@ const path = "ProductFiles.json"
 
 class ProductManager {
   constructor (path){
-    this.path = path; 
-    this.product = []; 
+   this.path = path; 
+  
   }
 //Programación asíncrona
-  async getProduct () {
+  async getProducts() {
     try {
-      if(fs.existsSync(path)){
-        const productFile = await fs.promises.readFile(path, "utf-8")
+      if(fs.existsSync(this.path)){
+        const productFile = await fs.promises.readFile(this.path, "utf-8")
         return JSON.parse(productFile)
       } else{
         return[]
       }
     } catch (error) {
-      return error
-    }
-  }
-
-  generateId = async() =>{
-    const counter = this.product.length
-    if (counter == 0){
-      return 1
-    } else{
-      return (this.product[counter-1].id)+1
-    }
-  }
-
-  async createProduct (product){
-    try {
-      const product = await this.getProduct()
-      let id 
-      if(!product.length){
-        id = 1
-      }else{
-        id = this.product[this.product.length-1].id + 1
-      }
-      product.push({id,...product})
-      await fs.promises.writeFile(path, JSON.stringify(product))
-    } catch (error) {
+      console.log(error)
       return error
     }
   }
 
   async getProductById(id) {
     try {
-      const products = await this.getProduct()
+      const products = await this.getProducts()
       const product = products.find(u => u.id === id);
       if(!product){
         return "El producto ingresado es inexistente"
@@ -59,32 +35,42 @@ class ProductManager {
     }
   }
 
-  addProduct = async (title,description,price,thumbnail,code,stock) =>{
+  addProduct = async ({title,description,price,thumbnail,code,stock}) =>{
+    const products = await this.getProducts()
+    try{
     if (!title || !description || !price || !thumbnail || !code || !stock){
       console.error ("Debes ingresar los datos del producto")
       return
     } else{
-    const repeatCode = this.product.find (element => element.code === code)
+    const repeatCode = products.find (element => element.code === code)
     if (repeatCode){
-      console.error("El código ingresado ya existe")
-      return
+      return console.error("El código ingresado ya existe")
     } else {
-      const id = await this.generateId()
+      let id
+      if (!products.length) {
+        id=1
+      }else {
+        id = products [products.length -1].id + 1
+      }
       const newProduct = {
         title,description,price,thumbnail,code,stock
       }
-      this.product.push(newProduct)
-      await fs.promises.writeFile(this.path, JSON.stringify(this.product, null, 2))
+      products.push({id, ...newProduct})
+      await fs.promises.writeFile(this.path, JSON.stringify(products))
     }
   }
+} catch (error){
+  console.log(error)
+  return error
+}
 }
 
-  updateProduct = async(id,title,description,price,thumbnail,code,stock) =>{
+  updateProduct = async(id,{title,description,price,thumbnail,code,stock}) =>{
   if (!title || !description || !price || !thumbnail || !code || !stock){
     console.error ("Debes ingresar los datos del producto")
     return 
 } else{
-  const productList = await this.getProduct()
+  const productList = await this.getProducts()
   const newProductList = productList.map(element=>{
     if(element.id === id){
       const updateProduct={
@@ -138,3 +124,25 @@ async function test(){
 }
 
 test()
+
+async function test(){
+  const p1 = new ProductManager("products.json")
+
+  await p1.addProduct({title: "Auto1", description: "description1", price: 15000, thumbnail:"url", code: 123, stock: 5})
+  console.log(await p1.getProducts())
+  await p1.addProduct({title: "Auto2", description: "description2", price: 25000, thumbnail:"url", code: 223, stock: 3})
+  await p1.addProduct({title: "Auto3", description: "description3", price: 20000, thumbnail:"url", code: 203, stock: 2})
+  await p1.addProduct({title: "Auto4", description: "description4", price: 22000, thumbnail:"url", code: 113, stock: 7})
+  console.log(await p1.getProducts())
+
+  console.log(await p1.getProductById(1))
+  console.log(await p1.getProductsById(3))
+
+  await p1.updateProduct(1, {title: "Auto1", description: "description1", price: 15000, thumbnail:"url", code: 123, stock: 5})
+  await p1.updateProduct(1, {title: "Auto3", description: "description3", price: 20000, thumbnail:"url", code: 203, stock: 2})
+  console.log(await p1.getProducts())
+
+  await p1.deleteProduct(3)
+  await p1.deleteProduct(1)
+  console.log(await p1.getProducts())
+}
