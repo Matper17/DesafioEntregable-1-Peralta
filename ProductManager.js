@@ -1,4 +1,6 @@
-const fs = require("fs");
+import { existsSync, promises } from "fs";
+//import { createHash } from "crypto";
+//const fs = require("fs");
 const path = "ProductFiles.json"
 
 class ProductManager {
@@ -8,10 +10,13 @@ class ProductManager {
   }
 //Programación asíncrona
   async getProducts() {
+    console.log("QueryObj", queryObj)
+    const {limit} = queryObj
     try {
-      if(fs.existsSync(this.path)){
-        const productFile = await fs.promises.readFile(this.path, "utf-8")
-        return JSON.parse(productFile)
+      if(existsSync(this.path)){
+        const productFile = await promises.readFile(this.path, "utf-8")
+        const productData = JSON.parse (productFile)
+        return limit ? productData.slice(0, limit) : productData; 
       } else{
         return[]
       }
@@ -56,7 +61,7 @@ class ProductManager {
         title,description,price,thumbnail,code,stock
       }
       products.push({id, ...newProduct})
-      await fs.promises.writeFile(this.path, JSON.stringify(products))
+      await promises.writeFile(this.path, JSON.stringify(products))
     }
   }
 } catch (error){
@@ -82,7 +87,7 @@ class ProductManager {
       return element
     }
   })
-  await fs.promises.writeFile (this.path, JSON.stringify(newProductList, null, 2))
+  await promises.writeFile (this.path, JSON.stringify(newProductList, null, 2))
 }
 }
 
@@ -90,7 +95,7 @@ class ProductManager {
     try {
       const products = await this.getProduct()
       const newArrayProducts = products.filter(u => u.id !== id)
-      await fs.promises.writeFile (path, JSON.stringify (newArrayProducts))
+      await promises.writeFile (path, JSON.stringify (newArrayProducts))
     } catch (error) {
       return error
     }
@@ -146,3 +151,5 @@ async function test(){
   await p1.deleteProduct(1)
   console.log(await p1.getProducts())
 }
+
+export const manager = new ProductManager(); 
