@@ -1,12 +1,12 @@
 import express from "express"
-import { manager } from "../ProductManager";
+import { manager } from "../ProductManager.js";
 
 const app = express();
 const server = 8080; 
 app.use(express.json()); 
 
 // Ruta de servidor 
-app.get("api/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
     try {
         const products = await manager.getProducts(req.query); 
         res.status(200).json({message: "Product found", products})
@@ -15,7 +15,7 @@ app.get("api/products", async (req, res) => {
     }
 });
 
-app.get("api/products/:id", async (req, res) => {
+app.get("/api/products/:id", async (req, res) => {
   const {id} = req.params; 
   try {
     const product = await manager.getProductById(+id); 
@@ -57,6 +57,7 @@ app.put("/api/products/:idProduct", async (req, res) =>{
         res.status(500).json({message: error.message})
     }
 })
+
 app.listen(server, ()=>{
     console.log(`Escuchando al puerto ${server}`)
 })

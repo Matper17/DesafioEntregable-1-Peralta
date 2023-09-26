@@ -1,7 +1,7 @@
 import { existsSync, promises } from "fs";
 //import { createHash } from "crypto";
 //const fs = require("fs");
-const path = "ProductFiles.json"
+const path = "products.json"
 
 class ProductManager {
   constructor (path){
@@ -9,7 +9,7 @@ class ProductManager {
   
   }
 //Programación asíncrona
-  async getProducts() {
+  async getProducts(queryObj) {
     console.log("QueryObj", queryObj)
     const {limit} = queryObj
     try {
@@ -28,7 +28,7 @@ class ProductManager {
 
   async getProductById(id) {
     try {
-      const products = await this.getProducts()
+      const products = await this.getProducts({})
       const product = products.find(u => u.id === id);
       if(!product){
         return "El producto ingresado es inexistente"
@@ -123,12 +123,11 @@ const product2 = {
   stock: 200
 } 
 
-async function test(){
-  const product = ProductManager()
-  await product.deleteProduct(1)
-}
-
-test()
+//async function test(){
+  //const product = ProductManager()
+  //await product.deleteProduct(1)
+//}
+//test() --> ESTO ESTA COMENTADO PORQUE ESTABA DECLARADO 2 VECES Y NO ME CORRÍA EL SERVIDOR
 
 async function test(){
   const p1 = new ProductManager("products.json")
@@ -151,5 +150,6 @@ async function test(){
   await p1.deleteProduct(1)
   console.log(await p1.getProducts())
 }
+
 
 export const manager = new ProductManager(); 
