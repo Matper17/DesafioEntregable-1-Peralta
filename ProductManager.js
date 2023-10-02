@@ -95,7 +95,7 @@ class ProductManager {
     try {
       const products = await this.getProduct()
       const newArrayProducts = products.filter(u => u.id !== id)
-      await promises.writeFile (path, JSON.stringify (newArrayProducts))
+      await promises.writeFile (this.path, JSON.stringify (newArrayProducts))
     } catch (error) {
       return error
     }

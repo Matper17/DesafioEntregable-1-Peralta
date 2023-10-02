@@ -20,6 +20,9 @@ app.listen(server, ()=>{
     console.log(`Escuchando al puerto ${server}`)
 })
 
+
+
+
 //app.get("/api/products", async (req, res) => {
     //try {
         //const products = await manager.getProducts(req.query); 

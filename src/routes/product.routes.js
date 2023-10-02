@@ -4,7 +4,7 @@ import { manager } from "../../ProductManager.js";
 
 const router = Router(); 
 
-router.get("/", async (req, res) =>{
+router.get("/api/products", async (req, res) =>{
     try {
         const products = await manager.getProducts(req.query); 
         res.status(200).json({message: "Product found", products})
@@ -13,7 +13,7 @@ router.get("/", async (req, res) =>{
     }
 })
 
-router.get("/:id", async (req, res) =>{
+router.get("/api/products/:id", async (req, res) =>{
     const {id} = req.params
     try {
         const product = await manager.getProductById(+id)
@@ -29,9 +29,9 @@ router.get("/:id", async (req, res) =>{
     }
 })
 
-router.post("/", async (req, res) =>{
-    const {product_name, description, price} = req.body
-    if(!product_name || !description || !price){
+router.post("/api/products", async (req, res) =>{
+    const {title, description, price, thumbnail, code, stock} = req.body
+    if(!title || !description || !price || !thumbnail || !code || !stock){
         return res.status(400).json({message: "Some data is wrong"})
     }
     try {
@@ -42,7 +42,7 @@ router.post("/", async (req, res) =>{
     }
 })
 
-router.delete("/:idProduct", async (req, res) =>{
+router.delete("/api/products/:idProduct", async (req, res) =>{
     const {idProduct} = req.params
     try {
         const response = await manager.deleteProduct(+idProduct)
@@ -57,10 +57,10 @@ router.delete("/:idProduct", async (req, res) =>{
     }
 })
 
-router.put("/:idProduct", async(req, res) =>{
+router.put("/api/products/:idProduct", async(req, res) =>{
     const {idProduct} = req.params
     try {
-        const response = await manager.updateProduct(+idProduct)
+        const response = await manager.updateProduct(+idProduct, req.body)
         if(!response){
             return res
             .status(404)
