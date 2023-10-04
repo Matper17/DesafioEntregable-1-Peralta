@@ -6,17 +6,17 @@ const router = Router();
 
 app.post("/", (req, res) =>{
     try {
-        const newCart = cartsManager.createCart()
-        res.status(200).json({message: "Create Cart", cart: newCart})
+        const newCart = cartsManager.createCart() //Intento poner el await que me sugeriste y me tira un error de expresión como si tuviera que usar algo dentro del paréntesis
+        res.status(201).json({message: "Create Cart", cart: newCart})
     } catch (error) {
         res.status(500).json({message: error.message})
     }
 })
 
-app.get("/:id", async (req, res)=>{
-    const {id} = req.params
+app.get("/:pid", async (req, res)=>{
+    const {pid} = req.params
     try {
-        const cart = await cartsManager.getCartById(+id)
+        const cart = await cartsManager.getCartById(+pid)
         if(!cart){
             res.status(404).json({message: "Cart not found"})
             return; 
@@ -27,11 +27,11 @@ app.get("/:id", async (req, res)=>{
     }
 })
 
-app.post("/:id/product/:idProduct", async (req, res)=>{
-    const {id, idProduct} = req.params
+app.post("/", async (req, res)=>{
+    const {pid} = req.params
     const {quantity} = req.body
     try {
-        await cartsManager.addProductCart(+id, +idProduct, quantity)
+        await cartsManager.addProductToCart(+pid, quantity)
         res.status(201).json({message: "Producto agregado al carrito"})
     } catch (error) {
         res.status(500).json({message: error.message})

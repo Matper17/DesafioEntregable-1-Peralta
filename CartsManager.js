@@ -48,7 +48,7 @@ class CartManager {
             throw new Error(error.message)
         }
     }
-    async addProductCart(idCart, idProduct){
+    async addProductToCart(idCart, idProduct){
         //Validación del carrito
         const cart = await this.getCartById(idCart)
         if(!cart){
@@ -66,6 +66,10 @@ class CartManager {
         } else{
             cart.products[productIndex].quantity++
         }
+        const carts = await this.getCarts()
+        const cartIndex = carts.findIndex(cart => cart.id === idCart)
+        carts[cartIndex] = cart
+        await promises.writeFile(path, JSON.stringify(carts))
     }
 }
 

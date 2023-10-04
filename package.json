@@ -1,12 +1,11 @@
 {
   "name": "desafioentregable1",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Pre entrega proyecto final",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/server.js",
-    "dev": "node server.js"
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
