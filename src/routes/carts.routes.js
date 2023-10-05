@@ -4,7 +4,7 @@ const router = Router();
 
 //Creación del nuevo carrito
 
-app.post("/", (req, res) =>{
+router.post("/", (req, res) =>{
     try {
         const newCart = cartsManager.createCart() //Intento poner el await que me sugeriste y me tira un error de expresión como si tuviera que usar algo dentro del paréntesis
         res.status(201).json({message: "Create Cart", cart: newCart})
@@ -13,7 +13,7 @@ app.post("/", (req, res) =>{
     }
 })
 
-app.get("/:pid", async (req, res)=>{
+router.get("/:pid", async (req, res)=>{
     const {pid} = req.params
     try {
         const cart = await cartsManager.getCartById(+pid)
@@ -27,11 +27,11 @@ app.get("/:pid", async (req, res)=>{
     }
 })
 
-app.post("/", async (req, res)=>{
-    const {pid} = req.params
+router.post("/:cid/product/:pid", async (req, res)=>{
+    const {pid, cid} = req.params
     const {quantity} = req.body
     try {
-        await cartsManager.addProductToCart(+pid, quantity)
+        await cartsManager.addProductToCart(+cid, +pid, quantity)
         res.status(201).json({message: "Producto agregado al carrito"})
     } catch (error) {
         res.status(500).json({message: error.message})

@@ -1,4 +1,4 @@
-import {existSync, promises} from "fs"
+import {existsSync, promises} from "fs"
 import { manager } from "./ProductManager.js"
 
 const path = "CartFile.json"
@@ -6,7 +6,7 @@ const path = "CartFile.json"
 class CartManager {
     async getCarts(){
         try {
-            if (existSync(path)){
+            if (existsSync(path)){
                 const cartsFile = await promises.readFile(path, "utf-8")
                 const cartsData = JSON.parse(cartsFile)
                 return cartsData
