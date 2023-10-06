@@ -13,10 +13,10 @@ router.post("/", (req, res) =>{
     }
 })
 
-router.get("/:pid", async (req, res)=>{
-    const {pid} = req.params
+router.get("/:cid", async (req, res)=>{
+    const {cid} = req.params
     try {
-        const cart = await cartsManager.getCartById(+pid)
+        const cart = await cartsManager.getCartById(+cid)
         if(!cart){
             res.status(404).json({message: "Cart not found"})
             return; 
