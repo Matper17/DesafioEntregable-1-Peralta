@@ -38,4 +38,6 @@ router.post("/:cid/product/:pid", async (req, res)=>{
     }
 })
 
+//:cid y :pid, en el navegador se debe poner localhost:8080/api/products o cart/n° de id (cid o pid)
+
 export default router; 
