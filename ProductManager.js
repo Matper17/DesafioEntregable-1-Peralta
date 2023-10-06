@@ -29,7 +29,7 @@ class ProductManager {
   async getProductById(id) {
     try {
       const products = await this.getProducts({})
-      const product = products.find(u => u.id === id);
+      const product = products.find(p => p.id === id);
       if(!product){
         return "El producto ingresado es inexistente"
       } else{
@@ -94,7 +94,7 @@ class ProductManager {
   async deleteProduct(id){
     try {
       const products = await this.getProduct()
-      const newArrayProducts = products.filter(u => u.id !== id)
+      const newArrayProducts = products.filter(p => p.id !== id)
       await promises.writeFile (this.path, JSON.stringify (newArrayProducts))
     } catch (error) {
       return error
